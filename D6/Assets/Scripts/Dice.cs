@@ -12,8 +12,17 @@ public class Dice : MonoBehaviour
 
     private bool _hasRolled;
     private bool _lockDie;
-    
     public int Score { get; private set; }
+    public bool HasScore => Score > 0;
+
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+
+    private void Awake()
+    {
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+    }
     
     private void FixedUpdate()
     {
@@ -92,5 +101,12 @@ public class Dice : MonoBehaviour
     {
         _lockDie = !_lockDie;
         _outline.SetActive(!_lockDie);
+    }
+
+    public void DiceReset()
+    {
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
+        _hasRolled = false;
     }
 }

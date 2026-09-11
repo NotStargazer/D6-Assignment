@@ -50,8 +50,25 @@ public class Manger : MonoBehaviour
         {
             foreach (var die in _dice)
             {
-                _rollsLeft--;
                 die.Roll();
+            }
+
+            _rollsLeft--;
+        }
+
+        foreach(var d in _dice)
+        {
+            if (!d.HasScore)
+            {
+                return;
+            }
+        }
+
+        if (GUILayout.Button("Reroll", GUILayout.Width(250), GUILayout.Height(100)) && _rollsLeft > 0)
+        {
+            foreach (var die in _dice)
+            {
+                die.DiceReset();
             }
         }
     }
