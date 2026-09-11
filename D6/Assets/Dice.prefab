@@ -140,7 +140,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dice
   _outline: {fileID: 677246427761514875}
   _rigidbody: {fileID: 5187968633001440791}
-  _rotationImpulseMultiplier: 30
+  _collider: {fileID: 2615898288339230990}
+  _rotationImpulseMultiplier: 23
   _launchImpulseMultiplier: 10
 --- !u!65 &2615898288339230990
 BoxCollider:
@@ -173,7 +174,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 1
+  m_AngularDamping: 0.75
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

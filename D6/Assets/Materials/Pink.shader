@@ -9,7 +9,7 @@ Shader "Custom/Pink"
     {
         Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
 
-        Blend One One
+        Blend SrcAlpha OneMinusSrcAlpha
         
         Pass
         {

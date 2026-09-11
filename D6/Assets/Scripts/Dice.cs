@@ -7,6 +7,7 @@ public class Dice : MonoBehaviour
 {
     [SerializeField] private GameObject _outline;
     [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private Collider _collider;
     [Range(1, 100)] [SerializeField] private float _rotationImpulseMultiplier = 10;
     [Range(1, 100)] [SerializeField] private float _launchImpulseMultiplier = 10;
 
@@ -29,6 +30,7 @@ public class Dice : MonoBehaviour
         if (_rigidbody.IsSleeping())
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            _collider.isTrigger = true;
 
             if (Score == 0)
             {
@@ -85,7 +87,10 @@ public class Dice : MonoBehaviour
         _hasRolled = true;
         _rigidbody.constraints = RigidbodyConstraints.None;
         
-        _rigidbody.AddTorque(Random.insideUnitSphere * _rotationImpulseMultiplier, ForceMode.Impulse);
+        _rigidbody.AddTorque(new Vector3(
+            Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f),
+            Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f), 
+            Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f)) * _rotationImpulseMultiplier * Random.Range(-1.2f, 1.2f), ForceMode.Impulse);
         _rigidbody.AddForce(Vector3.up * _launchImpulseMultiplier, ForceMode.Impulse);
     }
 
@@ -108,5 +113,6 @@ public class Dice : MonoBehaviour
         transform.position = originalPosition;
         transform.rotation = originalRotation;
         _hasRolled = false;
+        _collider.isTrigger = false;
     }
 }
