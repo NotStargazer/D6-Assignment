@@ -1535,6 +1535,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Manger
   _dicePrefab: {fileID: 3274414169791971786, guid: 1079787970cab3b46b2425a6ef977b9b, type: 3}
+  _camera: {fileID: 330585545}
+  _mousePos:
+    m_Name: Mouse Pos
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: 13fb12d1-fa42-4500-8191-d0cd6e042afd
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: df5cbfa4-6498-4632-8b80-4a1c47762d58
+      m_Path: <Mouse>/position
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Pos
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
+  _mouseClick:
+    m_Name: Mouse Click
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 272424a2-c47a-4c49-b620-8f595e1c4f56
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 78d537b2-0854-44a0-b128-5b2bf65db865
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Click
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
   _diceMinX: -6
   _diceMaxX: 6
   _diceMinY: -2

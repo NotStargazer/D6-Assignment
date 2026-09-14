@@ -1,14 +1,18 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Manger : MonoBehaviour
 {
     [SerializeField] private Dice _dicePrefab;
-    [Range(-10, 10)][SerializeField] private float _diceMinX;
-    [Range(-10, 10)][SerializeField] private float _diceMaxX;
-    [Range(-10, 10)][SerializeField] private float _diceMinY;
-    [Range(-10, 10)][SerializeField] private float _diceMaxY;
-    [Range(-10, 10)][SerializeField] private int _totalRolls;
+    [SerializeField] private Camera _camera;
+    [SerializeField] private InputAction _mousePos;
+    [SerializeField] private InputAction _mouseClick;
+    [Range(-10, 10)] [SerializeField] private float _diceMinX;
+    [Range(-10, 10)] [SerializeField] private float _diceMaxX;
+    [Range(-10, 10)] [SerializeField] private float _diceMinY;
+    [Range(-10, 10)] [SerializeField] private float _diceMaxY;
+    [Range(-10, 10)] [SerializeField] private int _totalRolls;
     [SerializeField] private Vector2Int _diceRowColumn;
     [SerializeField] private Vector2Int _boardSize = new(5, 5);
     [SerializeField] private Tile[] _tiles;
@@ -17,12 +21,29 @@ public class Manger : MonoBehaviour
     [SerializeField] private Transform _player;
     private Dice[] _dice;
     private int _rollsLeft;
+    private Vector2 _currentMousePos;
 
     private void Awake()
     {
+        _mousePos.performed += context =>
+        {
+            _currentMousePos = context.ReadValue<Vector2>();
+        };
+        _mouseClick.performed += _ =>
+        {
+            var ray = _camera.ScreenPointToRay(_currentMousePos);
+            if (Physics.Raycast(ray, out var hit))
+            {
+                if (hit.transform.TryGetComponent<Dice>(out var dice))
+                {
+                    dice.OnClick();
+                }
+            }
+        };
+        _mouseClick.Enable();
+        _mousePos.Enable();
+        
         _player.localPosition = _tiles[0].TilePosition + new Vector3(0,0.25f,0);
-
-        Physics.queriesHitTriggers = true;
         _dice = new Dice[_diceRowColumn.x * _diceRowColumn.y];
         _rollsLeft = _totalRolls;
         
@@ -52,7 +73,21 @@ public class Manger : MonoBehaviour
 
     private void OnGUI()
     {
-        GUILayout.Label($"Rolls left: {_rollsLeft}");
+        GUILayout.Label($"Rolls left: {_rollsLeft}", new GUIStyle
+        {
+            fontSize = 50
+        });
+        
+        GUI.enabled = true;
+        foreach(var d in _dice)
+        {
+            if (!d.CanRoll)
+            {
+                GUI.enabled = false;
+                break;
+            }
+        }
+        
         if (GUILayout.Button("Roll Dice", GUILayout.Width(250), GUILayout.Height(100)) && _rollsLeft > 0)
         {
             foreach (var die in _dice)
@@ -62,12 +97,14 @@ public class Manger : MonoBehaviour
 
             _rollsLeft--;
         }
-
+        
+        GUI.enabled = _rollsLeft > 0;
         foreach(var d in _dice)
         {
-            if (!d.HasScore)
+            if (!d.CanReset)
             {
-                return;
+                GUI.enabled = false;
+                break;
             }
         }
 
@@ -75,7 +112,7 @@ public class Manger : MonoBehaviour
         {
             foreach (var die in _dice)
             {
-                die.DiceReset();
+                die.ResetDie();
             }
         }
 

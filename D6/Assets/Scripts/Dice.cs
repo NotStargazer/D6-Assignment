@@ -14,7 +14,8 @@ public class Dice : MonoBehaviour
     private bool _hasRolled;
     private bool _lockDie;
     public int Score { get; private set; }
-    public bool HasScore => Score > 0;
+    public bool CanRoll => Score == 0 && !_hasRolled || _lockDie;
+    public bool CanReset => Score > 0;
 
     private Vector3 originalPosition;
     private Quaternion originalRotation;
@@ -68,15 +69,6 @@ public class Dice : MonoBehaviour
         Debug.Log($"Score calculation: {Score}");
     }
 
-    public void ResetDie()
-    {
-        if (!_lockDie)
-        {
-            _hasRolled = false;
-            Score = 0;
-        }
-    }
-
     public void Roll()
     {
         if (_hasRolled)
@@ -90,7 +82,7 @@ public class Dice : MonoBehaviour
         _rigidbody.AddTorque(new Vector3(
             Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f),
             Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f), 
-            Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f)) * _rotationImpulseMultiplier * Random.Range(-1.2f, 1.2f), ForceMode.Impulse);
+            Random.Range(0.5f, 2f) * Mathf.Sign(Random.value - 0.5f)) * (_rotationImpulseMultiplier * Random.Range(-1.2f, 1.2f)), ForceMode.Impulse);
         _rigidbody.AddForce(Vector3.up * _launchImpulseMultiplier, ForceMode.Impulse);
     }
 
@@ -102,17 +94,24 @@ public class Dice : MonoBehaviour
         }
     }
 
-    private void OnMouseUp()
+    public void OnClick()
     {
-        _lockDie = !_lockDie;
-        _outline.SetActive(!_lockDie);
+        if (CanReset)
+        {
+            _lockDie = !_lockDie;
+            _outline.SetActive(_lockDie);   
+        }
     }
 
-    public void DiceReset()
+    public void ResetDie()
     {
-        transform.position = originalPosition;
-        transform.rotation = originalRotation;
-        _hasRolled = false;
-        _collider.isTrigger = false;
+        if (!_lockDie)
+        {
+            Score = 0;
+            transform.position = originalPosition;
+            transform.rotation = originalRotation;
+            _hasRolled = false;
+            _collider.isTrigger = false;
+        }
     }
 }
